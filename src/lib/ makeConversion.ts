@@ -1,7 +1,27 @@
-const  makeConversion = (amount: number, currencyOne: string, currencyTwo: string): number => {
-    const newAmount = amount + 1;
+const dataRates = JSON.parse(localStorage.getItem("serverData"));
 
-    return newAmount
-}
+const makeConversion = (
+  amount: number,
+  currencyOne: string,
+  currencyTwo: string,
+  type = "straight"
+): number => {
+  const rateOne = dataRates[currencyOne];
+  const rateTwo = dataRates[currencyTwo];
+  const currentRate = rateTwo / rateOne;
 
-export {makeConversion}
+  let result;
+
+  switch (type) {
+    case "flipped":
+      result = amount / currentRate;
+      break;
+    default:
+      result = amount * currentRate;
+      break;
+  }
+
+  return parseFloat(result.toFixed(3));
+};
+
+export { makeConversion };
