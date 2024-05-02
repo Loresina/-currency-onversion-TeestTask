@@ -25,8 +25,6 @@
 
       updateTime = data.time_next_update_utc.slice(0, -6);
       amountTwo = makeConversion(amountOne, currencyOne, currencyTwo, selected);
-
-      console.log(selected);
     } catch (e) {
       console.error("it is fetch error", e);
     }
@@ -36,10 +34,8 @@
     const eventType = e.target.id;
 
     if (eventType === "amount-one" || eventType === "currency-one") {
-      console.log("кейс 1");
       amountTwo = makeConversion(amountOne, currencyOne, currencyTwo, selected);
     } else {
-      console.log("кейс 2");
       amountOne = makeConversion(
         amountTwo,
         currencyOne,
@@ -50,8 +46,7 @@
     }
   };
 
-  const turnCyrrency = () => {
-    console.log("hello", currencyOne, currencyTwo, amountOne, amountTwo);
+  const turnCurrency = () => {
     const temporaryAmountTwo = amountTwo;
     const temporaryCurrencyTwo = currencyTwo;
     amountTwo = amountOne;
@@ -87,7 +82,7 @@
       </div>
     </div>
 
-    <button on:click={turnCyrrency} class="button-arrow"
+    <button on:click={turnCurrency} class="button-arrow"
       ><img src={arrow} alt="arrow button" /></button
     >
 
