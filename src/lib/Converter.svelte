@@ -213,5 +213,9 @@
       flex-direction: column;
       gap: 5px;
     }
+
+    .information {
+      max-width: 255px;
+    }
   }
 </style>

@@ -18,4 +18,15 @@
   .logo {
     height: 22em;
   }
+
+  @media (max-width: 900px) {
+    .logo {
+      height: 18em;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      max-width: 370px;
+    }
+  }
 </style>
