@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { makeConversion } from "./ makeConversion";
-
-  // let data;
+  import arrow from "../assets/arrow.svg";
 
   type Rates = {
     [key: string]: number;
@@ -22,46 +21,51 @@
       const response = await fetch("https://open.er-api.com/v6/latest/USD");
       const data = await response.json();
 
-      localStorage.setItem("serverData", JSON.stringify(data.rates));
-
       selected = data.rates;
-      amountTwo = makeConversion(amountOne, currencyOne, currencyTwo);
+
       updateTime = data.time_next_update_utc.slice(0, -6);
+      amountTwo = makeConversion(amountOne, currencyOne, currencyTwo, selected);
 
       console.log(selected);
     } catch (e) {
-      console.error("it is fetch error", e.message);
+      console.error("it is fetch error", e);
     }
   });
 
   const onChange = (e) => {
-    console.log("СОБЫТИЕ!!!!!!");
     const eventType = e.target.id;
 
     if (eventType === "amount-one" || eventType === "currency-one") {
       console.log("кейс 1");
-      amountTwo = makeConversion(amountOne, currencyOne, currencyTwo);
+      amountTwo = makeConversion(amountOne, currencyOne, currencyTwo, selected);
     } else {
       console.log("кейс 2");
       amountOne = makeConversion(
         amountTwo,
         currencyOne,
         currencyTwo,
+        selected,
         "flipped"
       );
     }
   };
 
-  // $: total = makeConversion(amount, "USA", 0, "RUS");
-  // $: {
-  //   console.log("Печатаю currencyOne", currencyOne);
-  // }
+  const turnCyrrency = () => {
+    console.log("hello", currencyOne, currencyTwo, amountOne, amountTwo);
+    const temporaryAmountTwo = amountTwo;
+    const temporaryCurrencyTwo = currencyTwo;
+    amountTwo = amountOne;
+    amountOne = temporaryAmountTwo;
+
+    currencyTwo = currencyOne;
+    currencyOne = temporaryCurrencyTwo;
+  };
 </script>
 
 {#if selected}
   <div class="converter">
     <div class="converter_item">
-      <label for="amount-one">Enter amount and currency one:</label>
+      <label for="amount-one">From</label>
       <div class="converter_options">
         <input
           id="amount-one"
@@ -70,7 +74,6 @@
           type="number"
         />
 
-        <!-- <label for="currency-one">Select currency one:</label> -->
         <select
           bind:value={currencyOne}
           on:change={onChange}
@@ -84,8 +87,12 @@
       </div>
     </div>
 
+    <button on:click={turnCyrrency} class="button-arrow"
+      ><img src={arrow} alt="arrow button" /></button
+    >
+
     <div class="converter_item">
-      <label for="amount-two"> Enter amount and currency two:</label>
+      <label for="amount-two">To</label>
 
       <div class="converter_options">
         <input
@@ -95,7 +102,6 @@
           type="number"
         />
 
-        <!-- <label for="currency-two">Select currency two:</label> -->
         <select
           bind:value={currencyTwo}
           on:change={onChange}
@@ -132,16 +138,18 @@
 
   .converter {
     display: flex;
-    justify-content: space-between, center;
+    justify-content: space-between;
+    align-items: flex-end;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
     max-width: 100%;
   }
 
   .converter_item {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start, flex-start;
+    justify-content: flex-start;
+    align-items: start;
     gap: 5px;
   }
 
@@ -152,7 +160,7 @@
   }
 
   label {
-    font-size: 0.98em;
+    font-weight: 700;
   }
 
   input {
@@ -169,10 +177,41 @@
     font-size: 16px;
   }
 
+  .button-arrow {
+    display: flex;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    border: none;
+    background: none;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .button-arrow:hover {
+    transform: scale(1.1);
+  }
+
+  .button-arrow:focus {
+    outline: none;
+  }
+
+  .button-arrow img {
+    width: 100%;
+    object-fit: cover;
+  }
+
   .information {
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+
+  @media (max-width: 900px) {
+    .converter {
+      flex-direction: column;
+      gap: 5px;
+    }
   }
 </style>

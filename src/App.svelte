@@ -1,6 +1,5 @@
 <script lang="ts">
   import app from "./assets/app.svg";
-  import viteLogo from "/vite.svg";
   import Converter from "./lib/Converter.svelte";
 </script>
 
@@ -17,6 +16,6 @@
 
 <style>
   .logo {
-    height: 23em;
+    height: 22em;
   }
 </style>
